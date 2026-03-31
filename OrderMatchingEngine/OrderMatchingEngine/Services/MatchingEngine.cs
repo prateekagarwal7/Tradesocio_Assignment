@@ -131,6 +131,23 @@ namespace OrderMatchingEngine.Services
             AddOrder(newOrder);
         }
 
+        public void Print()
+        {
+            Console.WriteLine("SELL:");
+            foreach (var kvp in orderBook.SellOrders)
+            {
+                Console.WriteLine($"{kvp.Key} -> {kvp.Value.Sum(o => o.Quantity)}");
+            }
+
+            Console.WriteLine("\nBUY:");
+            foreach (var kvp in orderBook.BuyOrders)
+            {
+                Console.WriteLine($"{kvp.Key} -> {kvp.Value.Sum(o => o.Quantity)}");
+            }
+
+            Console.WriteLine($"\nTotal PnL: {TotalPnL}");
+        }
+
         public MatchingEngine()
         {
             orderBook = new OrderBook();  

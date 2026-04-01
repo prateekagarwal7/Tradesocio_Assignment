@@ -2,12 +2,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace PositionPnLEngine
 {
     public class PositionEngine
     {
-        private readonly Dictionary<string, Position> _positions = new();
+        private Dictionary<string, Position> _positions = new();
+        public IReadOnlyDictionary<string, Position> Positions => _positions;
 
         // Command: FILL
         public void Fill(string side, string symbol, int qty, decimal price)

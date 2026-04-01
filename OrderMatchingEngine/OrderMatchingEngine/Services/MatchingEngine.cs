@@ -4,16 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OrderMatchingEngine.Models;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("OrderMatchingTests")]
 
 namespace OrderMatchingEngine.Services
 {
     public class MatchingEngine
-    {
-        private OrderBook orderBook;   
+    {   
+        internal OrderBook orderBook;   
 
         public decimal TotalPnL { get; set; } = 0;
 
-        private void MatchBuy(Order buy)
+        internal void MatchBuy(Order buy)
         {
             while (buy.Quantity > 0 && orderBook.SellOrders.Any())
             {
@@ -27,8 +30,7 @@ namespace OrderMatchingEngine.Services
 
                 int tradeQty = Math.Min(buy.Quantity, sellOrder.Quantity);
 
-                // ✅ PnL (MANDATORY)
-                TotalPnL += (sellOrder.Price - buy.Price) * tradeQty;
+                TotalPnL += (buy.Price - sellOrder.Price) * tradeQty;
 
                 buy.Quantity -= tradeQty;
                 sellOrder.Quantity -= tradeQty;
@@ -42,7 +44,7 @@ namespace OrderMatchingEngine.Services
             }
         }
 
-        private void MatchSell(Order sell)
+        internal void MatchSell(Order sell)
         {
             while (sell.Quantity > 0 && orderBook.BuyOrders.Any())
             {
@@ -56,9 +58,7 @@ namespace OrderMatchingEngine.Services
 
                 int tradeQty = Math.Min(sell.Quantity, buyOrder.Quantity);
 
-                // ✅ PnL
-                TotalPnL += (sell.Price - buyOrder.Price) * tradeQty;
-
+                TotalPnL += (buyOrder.Price - sell.Price) * tradeQty;
                 sell.Quantity -= tradeQty;
                 buyOrder.Quantity -= tradeQty;
 
@@ -71,7 +71,7 @@ namespace OrderMatchingEngine.Services
             }
         }
 
-        private void AddToBook(Order order)
+        internal void AddToBook(Order order)
         {
             var book = order.Side == "BUY" ? orderBook.BuyOrders : orderBook.SellOrders;
 
